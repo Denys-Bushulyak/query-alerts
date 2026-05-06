@@ -18,7 +18,7 @@ pub enum GetAlertsError {
 pub async fn get_alerts(entrypoint: Url, debug: bool) -> Result<Vec<Alert>, GetAlertsError> {
     let response = reqwest::get(entrypoint)
         .await
-        .map_err(|e| GetAlertsError::HttpError(e))?;
+        .map_err(GetAlertsError::HttpError)?;
 
     let body = response.text().await.unwrap_or_default();
     if debug {
@@ -26,10 +26,10 @@ pub async fn get_alerts(entrypoint: Url, debug: bool) -> Result<Vec<Alert>, GetA
     }
 
     let dtos: Vec<AlertDto> =
-        serde_json::from_str(&body).map_err(|e| GetAlertsError::JsonError(e))?;
+        serde_json::from_str(&body).map_err(GetAlertsError::JsonError)?;
 
     dtos.into_iter()
         .map(TryInto::try_into)
         .collect::<Result<Vec<Alert>, _>>()
-        .map_err(|e| GetAlertsError::ValidationError(e))
+        .map_err(GetAlertsError::ValidationError)
 }

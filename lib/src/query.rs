@@ -1,13 +1,10 @@
 use std::collections::{HashMap, HashSet};
 
-use crate::entities::{Alert, AlertId, Language, QueryTerm, TermId};
+use crate::entities::{Alert, AlertId, QueryTerm, TermId};
 
-pub fn match_alerts(
-    alerts: &[Alert],
-    query_terms: &[QueryTerm],
-) -> HashMap<TermId, HashSet<AlertId>> {
+pub fn query(alerts: &[Alert], query_terms: &[QueryTerm]) -> HashMap<TermId, HashSet<AlertId>> {
     // Group terms by language
-    let mut terms_by_language: HashMap<&Language, Vec<&QueryTerm>> = HashMap::new();
+    let mut terms_by_language: HashMap<&String, Vec<&QueryTerm>> = HashMap::new();
     query_terms.iter().for_each(|term| {
         let terms = terms_by_language.get_mut(&term.language);
         if let Some(terms) = terms {
@@ -17,7 +14,7 @@ pub fn match_alerts(
         }
     });
 
-    let mut term_alert_map: HashMap<TermId, HashSet<AlertId>> = HashMap::new();
+    let mut result: HashMap<TermId, HashSet<AlertId>> = HashMap::new();
 
     alerts.iter().for_each(|alert| {
         alert.contents.iter().for_each(|alert_content| {
@@ -33,10 +30,7 @@ pub fn match_alerts(
                             .to_lowercase()
                             .contains(&term.text.to_lowercase())
                         {
-                            term_alert_map
-                                .entry(term_id)
-                                .or_default()
-                                .insert(alert_id.clone());
+                            result.entry(term_id).or_default().insert(alert_id.clone());
                         }
                     } else {
                         let term_text = term.text.to_lowercase();
@@ -44,10 +38,7 @@ pub fn match_alerts(
 
                         for keyword in keywords {
                             if alert_content.text.to_lowercase().contains(keyword) {
-                                term_alert_map
-                                    .entry(term_id)
-                                    .or_default()
-                                    .insert(alert_id.clone());
+                                result.entry(term_id).or_default().insert(alert_id.clone());
                             }
                         }
                     }
@@ -56,5 +47,5 @@ pub fn match_alerts(
         });
     });
 
-    term_alert_map
+    result
 }

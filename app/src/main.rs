@@ -3,7 +3,7 @@ use std::env;
 use prewave_test_task_lib::{
     data_providers::{get_alerts::get_alerts, get_query_terms::get_query_terms},
     etc::{get_alert_path, get_query_terms_path},
-    match_alerts,
+    query,
 };
 
 const API_ENTRYPOINT_ENV_KEY: &str = "API_ENTRYPOINT";
@@ -12,14 +12,10 @@ pub const DEBUG_MODE_ENV_KEY: &str = "DEBUG";
 
 #[tokio::main]
 async fn main() {
-    let debug_mode = match env::var(DEBUG_MODE_ENV_KEY)
+    let debug_mode = env::var(DEBUG_MODE_ENV_KEY)
         .unwrap_or_default()
         .parse::<bool>()
-    {
-        Ok(mode) => mode,
-        _ => false,
-    };
-    println!("Debug mode: {}", debug_mode);
+        .unwrap_or_default();
 
     let entrypoint = env::var(API_ENTRYPOINT_ENV_KEY).expect("API_ENTRYPOINT not set");
     let api_key = env::var(API_KEY_ENV_KEY).expect("API_KEY not set");
@@ -45,7 +41,13 @@ async fn main() {
         .unwrap();
     let alerts = get_alerts(alerts_entypoint, debug_mode).await.unwrap();
 
-    let result = match_alerts(&alerts, &query_terms);
+    let result = query(&alerts, &query_terms);
 
-    dbg!(result);
+    match serde_json::to_string(&result) {
+        Ok(json) => match debug_mode {
+            true => println!("result: {}", json),
+            false => println!("{}", json),
+        },
+        Err(e) => eprintln!("Error: {}", e),
+    }
 }

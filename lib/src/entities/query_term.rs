@@ -1,4 +1,4 @@
-use crate::entities::Language;
+use crate::entities::LanguageCode;
 
 pub type TermId = u64;
 
@@ -8,6 +8,6 @@ pub struct QueryTerm {
     pub target: u64,
     pub text: String,
     /// I predict that it's an ISO 639-1:2002 language code (e.g. "en", "fr", "es")
-    pub language: Language,
+    pub language: LanguageCode,
     pub keep_order: bool,
 }

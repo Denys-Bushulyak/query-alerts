@@ -11,7 +11,7 @@ fn convert_alert_dto_to_entity() {
         contents: vec![prewave_test_task_lib::dtos::AlertContentDto {
             text: "@En1Buena Ojalá lo logre eh, y una oferta de Ferrari es inigualable pero la veo fea".to_string(),
             r#type: "text".to_string(),
-            language: "es".into(),
+            language: "ês".into(),
         }],
         date: NaiveDateTime::parse_from_str("1996-12-19T16:39:57Z", "%+").unwrap().and_utc(),
         input_type: "tweet".to_string(),
@@ -23,7 +23,7 @@ fn convert_alert_dto_to_entity() {
         contents: vec![AlertContent {
             text: "@En1Buena Ojalá lo logre eh, y una oferta de Ferrari es inigualable pero la veo fea".to_string(),
             r#type: "text".to_string(),
-            language: "es".into(),
+            language: "ês".into(),
         }],
         date: NaiveDateTime::parse_from_str("1996-12-19T16:39:57Z", "%+").unwrap().and_utc(),
         input_type: "tweet".to_string(),

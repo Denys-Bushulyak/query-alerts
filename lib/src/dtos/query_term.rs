@@ -1,15 +1,13 @@
-use super::common::string_to_u8_array;
 use serde::Deserialize;
 
-use crate::entities::{Language, QueryTerm};
+use crate::entities::QueryTerm;
 
 #[derive(Debug, Deserialize)]
 pub struct QueryTermDto {
     pub id: u64,
     pub target: u64,
     pub text: String,
-    #[serde(deserialize_with = "string_to_u8_array")]
-    pub language: Language,
+    pub language: String,
     #[serde(rename(deserialize = "keepOrder"))]
     pub keep_order: bool,
 }

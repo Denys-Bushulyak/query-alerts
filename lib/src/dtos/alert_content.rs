@@ -1,14 +1,10 @@
-use crate::dtos::common::string_to_u8_array;
-use crate::entities::{AlertContent, Language};
+use crate::entities::AlertContent;
 
 #[derive(Debug, serde::Deserialize)]
 pub struct AlertContentDto {
     pub text: String,
     pub r#type: String,
-
-    /// The language of the alert content as a two-character code (e.g. "en", "fr", "es").
-    #[serde(deserialize_with = "string_to_u8_array")]
-    pub language: Language,
+    pub language: String,
 }
 
 #[derive(Debug)]
@@ -30,14 +26,14 @@ impl TryFrom<AlertContentDto> for AlertContent {
             return Err(ValidationError::TypeIsEmpty);
         }
 
-        if alert_content_dto.language == Language::default() {
+        if alert_content_dto.language.is_empty() {
             return Err(ValidationError::LanguageIsEmpty);
         }
 
         Ok(AlertContent {
             text: alert_content_dto.text,
             r#type: alert_content_dto.r#type,
-            language: alert_content_dto.language.into(),
+            language: alert_content_dto.language,
         })
     }
 }

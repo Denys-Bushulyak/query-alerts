@@ -2,6 +2,6 @@ pub mod data_providers;
 pub mod dtos;
 pub mod entities;
 pub mod etc;
-mod matching;
+mod query;
 
-pub use matching::match_alerts;
+pub use query::query;
