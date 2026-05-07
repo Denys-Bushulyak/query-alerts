@@ -1,6 +1,6 @@
-use criterion::{Criterion, criterion_group, criterion_main};
+use criterion::{BenchmarkId, Criterion, criterion_group, criterion_main};
 use prewave_test_task_lib::{
-    algorithms::use_regex_algorithm,
+    algorithms::{use_case_insensitive_algorithm, use_regex_algorithm},
     dtos::{AlertDto, QueryTermDto},
     query,
 };
@@ -20,8 +20,12 @@ fn criterion_benchmark(c: &mut Criterion) {
         .map(|t| t.try_into().unwrap())
         .collect::<Vec<_>>();
 
-    c.bench_function("query", |b| {
+    c.benchmark_group("algorithms");
+    c.bench_function("use_regex_algorithm", |b| {
         b.iter(|| query(&alerts, use_regex_algorithm(&terms)));
+    });
+    c.bench_function("use_case_insensitive_algorithm", |b| {
+        b.iter(|| query(&alerts, use_case_insensitive_algorithm(&terms)));
     });
 }
 

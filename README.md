@@ -70,7 +70,7 @@ make test
 # or
 cargo test
 
-# Run benchmarks
+# Run benchmarks to compare 2 algorithms performance
 make bench
 # or
 cargo bench
