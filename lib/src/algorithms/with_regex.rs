@@ -18,7 +18,9 @@ use crate::entities::{AlertContent, QueryTerm, TermId};
 ///
 /// Returns `Some(ids)` of every matching term (a term may push its id more than once
 /// when multiple unordered keywords match), or `None` when nothing matches.
-pub fn with_regex(query_terms: &[QueryTerm]) -> impl Fn(&AlertContent) -> Option<Vec<TermId>> {
+pub fn use_regex_algorithm(
+    query_terms: &[QueryTerm],
+) -> impl Fn(&AlertContent) -> Option<Vec<TermId>> {
     let regexes = query_terms.iter().fold(
         HashMap::<String, Regex>::new(),
         |mut regexes, term: &QueryTerm| {

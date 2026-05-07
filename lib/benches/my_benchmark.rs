@@ -1,6 +1,6 @@
 use criterion::{Criterion, criterion_group, criterion_main};
 use prewave_test_task_lib::{
-    algorithms::with_regex,
+    algorithms::use_regex_algorithm,
     dtos::{AlertDto, QueryTermDto},
     query,
 };
@@ -21,7 +21,7 @@ fn criterion_benchmark(c: &mut Criterion) {
         .collect::<Vec<_>>();
 
     c.bench_function("query", |b| {
-        b.iter(|| query(&alerts, with_regex(&terms)));
+        b.iter(|| query(&alerts, use_regex_algorithm(&terms)));
     });
 }
 
