@@ -1,3 +1,3 @@
-mod with_regex;
+mod use_regex_algorithm;
 
-pub use with_regex::*;
+pub use use_regex_algorithm::*;
