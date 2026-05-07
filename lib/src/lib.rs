@@ -7,6 +7,7 @@
 //! - [`etc`] — URL construction helpers.
 //! - [`query`] — core matching algorithm (re-exported publicly).
 
+pub mod algorithms;
 pub mod data_providers;
 pub mod dtos;
 pub mod entities;
@@ -15,3 +16,4 @@ mod query;
 
 /// Re-export of the main matching function.
 pub use query::query;
+pub use regex;

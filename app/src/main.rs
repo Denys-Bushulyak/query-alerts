@@ -1,6 +1,7 @@
 use std::env;
 
 use prewave_test_task_lib::{
+    algorithms::with_regex,
     data_providers::{get_alerts::get_alerts, get_query_terms::get_query_terms},
     etc::{get_alert_path, get_query_terms_path},
     query,
@@ -49,7 +50,8 @@ async fn main() {
         .unwrap();
     let alerts = get_alerts(alerts_entypoint, debug_mode).await.unwrap();
 
-    let result = query(&alerts, &query_terms);
+    let algo = with_regex(&query_terms);
+    let result = query(&alerts, algo);
 
     match serde_json::to_string(&result) {
         Ok(json) => match debug_mode {
