@@ -22,3 +22,7 @@ run:
 demo:
 	@echo "--- Running demo ---"
 	DEBUG=false cargo run --release | json_pp
+
+bench:
+	@echo "--- Running benchmarks ---"
+	cargo bench

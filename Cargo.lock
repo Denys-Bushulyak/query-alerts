@@ -991,6 +991,7 @@ dependencies = [
  "chrono",
  "criterion",
  "fastbloom",
+ "regex",
  "reqwest",
  "serde",
  "serde_json",
