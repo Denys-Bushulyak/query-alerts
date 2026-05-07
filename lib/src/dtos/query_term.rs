@@ -12,21 +12,12 @@ pub struct QueryTermDto {
     pub keep_order: bool,
 }
 
-#[derive(Debug)]
-pub enum QueryTermError {
-    ReqwestError(reqwest::Error),
-    BadResponse(reqwest::StatusCode),
-    ValidationError(String),
-}
-
 impl TryFrom<QueryTermDto> for QueryTerm {
-    type Error = QueryTermError;
+    type Error = String;
 
     fn try_from(value: QueryTermDto) -> Result<Self, Self::Error> {
         if value.text.trim().is_empty() {
-            return Err(QueryTermError::ValidationError(
-                "Text field cannot be empty".to_string(),
-            ));
+            return Err("Text field cannot be empty".to_string());
         }
 
         Ok(QueryTerm {

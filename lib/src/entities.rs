@@ -1,3 +1,5 @@
+//! Domain model types for alerts, query terms, and their shared value objects.
+
 mod alert;
 mod alert_content;
 mod language;
