@@ -48,25 +48,22 @@ pub fn query(alerts: &[Alert], query_terms: &[QueryTerm]) -> HashMap<TermId, Has
             for content in &alert.contents {
                 if let Some(terms) = terms_by_language.get(&content.language) {
                     for term in terms {
-                        match term.keep_order {
-                            true => {
+                        if term.keep_order {
+                            let re = regexes
+                                .get(&term.text.to_lowercase())
+                                .expect("Regext should be present!");
+                            if re.is_match(&content.text.as_bytes()) {
+                                acc.entry(term.id).or_default().insert(alert.id.clone());
+                            }
+                        } else {
+                            let keywords = term.text.split_whitespace();
+
+                            for keyword in keywords {
                                 let re = regexes
-                                    .get(&term.text.to_lowercase())
+                                    .get(&keyword.to_lowercase())
                                     .expect("Regext should be present!");
                                 if re.is_match(&content.text.as_bytes()) {
                                     acc.entry(term.id).or_default().insert(alert.id.clone());
-                                }
-                            }
-                            false => {
-                                let keywords = term.text.split_whitespace();
-
-                                for keyword in keywords {
-                                    let re = regexes
-                                        .get(&keyword.to_lowercase())
-                                        .expect("Regext should be present!");
-                                    if re.is_match(&content.text.as_bytes()) {
-                                        acc.entry(term.id).or_default().insert(alert.id.clone());
-                                    }
                                 }
                             }
                         }
