@@ -3,7 +3,7 @@ ifneq (,$(wildcard ./.env))
     export
 endif
 
-.PHONY: test run all clean
+.PHONY: test run all clean cov
 
 # Default target when just running 'make'
 all: run
@@ -18,6 +18,10 @@ test:
 run:
 	@echo "--- Running application ---"
 	cargo run
+
+cov:
+	@echo "--- Running coverage analysis ---"
+	cargo llvm-cov
 
 demo:
 	@echo "--- Running demo ---"
