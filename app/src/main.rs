@@ -1,7 +1,7 @@
 use std::env;
 
 use prewave_test_task_lib::{
-    algorithms::use_regex_algorithm,
+    algorithms::{use_case_insensitive_algorithm, use_regex_algorithm},
     data_providers::{get_alerts::get_alerts, get_query_terms::get_query_terms},
     etc::{get_alert_path, get_query_terms_path},
     query,
@@ -50,8 +50,23 @@ async fn main() {
         .unwrap();
     let alerts = get_alerts(alerts_entypoint, debug_mode).await.unwrap();
 
-    let algo = use_regex_algorithm(&query_terms);
-    let result = query(&alerts, algo);
+    let result = match env::args().skip(1).take(1).collect::<Vec<_>>()[0].as_str() {
+        "--regex" => {
+            let algo = use_regex_algorithm(&query_terms);
+            query(&alerts, algo)
+        }
+        "--simple" => {
+            let algo = use_case_insensitive_algorithm(&query_terms);
+            query(&alerts, algo)
+        }
+        _ => {
+            eprintln!(
+                "Invalid algorithm: {}. Choose 'simple' or 'regex'.",
+                env::args().skip(1).take(1).collect::<Vec<_>>()[0]
+            );
+            return;
+        }
+    };
 
     match serde_json::to_string(&result) {
         Ok(json) => match debug_mode {

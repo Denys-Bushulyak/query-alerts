@@ -23,9 +23,13 @@ cov:
 	@echo "--- Running coverage analysis ---"
 	cargo llvm-cov
 
-demo:
+demo_regex:
 	@echo "--- Running demo ---"
-	DEBUG=false cargo run --release | json_pp
+	DEBUG=false cargo run --release -- --regex | json_pp
+
+demo_simple:
+	@echo "--- Running demo ---"
+	DEBUG=false cargo run --release -- --simple | json_pp
 
 bench:
 	@echo "--- Running benchmarks ---"

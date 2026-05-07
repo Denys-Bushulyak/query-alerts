@@ -80,8 +80,11 @@ make cov
 # or
 cargo llvm-cov 
 
-# Run demo (release mode, pretty-printed JSON output)
-make demo
+# Run demo with regex algorithm (release mode, pretty-printed JSON output)
+make demo_regex
+
+# Run demo with case-insensitive matching algorithm (release mode, pretty-printed JSON output)
+make demo_simple
 
 # Clean build artifacts
 make clean
