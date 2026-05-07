@@ -1,5 +1,7 @@
 use std::collections::{HashMap, HashSet};
 
+use fastbloom::BloomFilter;
+
 use crate::entities::{Alert, AlertId, QueryTerm, TermId};
 
 pub fn query(alerts: &[Alert], query_terms: &[QueryTerm]) -> HashMap<TermId, HashSet<AlertId>> {
@@ -16,6 +18,26 @@ pub fn query(alerts: &[Alert], query_terms: &[QueryTerm]) -> HashMap<TermId, Has
             terms_by_language
         },
     );
+
+    // Apply bloom filter
+    let mut filter = BloomFilter::with_num_bits(2048).expected_items(alerts.len());
+    alerts.iter().for_each(|alert| {
+        alert.contents.iter().for_each(|c| {
+            filter.insert(c.text.as_bytes());
+        });
+    });
+
+    // Filter alerts by bloom filter
+    let alerts = alerts.into_iter().fold(vec![], |mut acc, alert| {
+        if alert
+            .contents
+            .iter()
+            .any(|c| !filter.contains(c.text.as_bytes()))
+        {
+            acc.push(alert);
+        }
+        acc
+    });
 
     let mut result: HashMap<TermId, HashSet<AlertId>> = HashMap::new();
 
